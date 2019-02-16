@@ -1,13 +1,14 @@
 ## k8-spark-connector-test
 
-### Prerequisites:
+## Prerequisites:
 * Access to an existing K8 cluster (K8 master API URI)
 * Access to an existing DSE cluster (IP address of a DSE node)
 * sbt installed in your machine (https://www.scala-sbt.org)
 * IntelliJ IDE (optional)
 
-### Build, Run and Monitor the spark job:
+## Build, Run and Monitor the spark job
 
+### Install Apache Spark and this repo
 * Download and install Apache Spark (2.4.0) - https://spark.apache.org/downloads.html
 * Download the sample Scala spark application using spark-cassandra-connector
 ```
@@ -15,7 +16,7 @@ $ git clone https://github.com/gmflau/k8-spark-connector-test
 $ cd k8-spark-connector-test
 ```
 
-### Build the Uber jar (a.k.a. fat jar) as it is required to use with spark-submit command
+### Build the Uber jar (a.k.a. fat jar) as it is required by the spark-submit command
 ```
 $ sbt assembly (will generate a fat jar under here: ./target/scala-2.11)
 ```
@@ -26,12 +27,13 @@ https://glau.blob.core.windows.net/spark-job/k8-spark-connector-test-assembly-0.
 
 ### Modify existing scala source or expand the application
 Scala source is located in this folder -> ./src/main/scala/datastax/
+After you are done updating the scala code, you will generate a new assembly jar again.
 ```
 Run $ sbt assembly 
 ```
 Upload the fat jar to some HTTP server accessible from the K8 cluster env.
 
-### Collect the K8 master API
+### Collect the K8 master API URI
 ```
 $ kubectl cluster-info
 Kubernetes master is running at https://k8-1117-ak-gml-aks-rg-f26e06-05524b44.hcp.westus2.azmk8s.io:443
@@ -67,7 +69,7 @@ For example, Apache Spark is installed at /Users/gilbertlau/spark-2.4.0-bin-hado
 $ /Users/gilbertlau/spark-2.4.0-bin-hadoop2.7/bin/spark-submit \
    --master k8s://https://k8-1117-ak-gml-aks-rg-f26e06-05524b44.hcp.westus2.azmk8s.io:443 \
    --conf spark.cassandra.connection.host=172.19.1.73 \
-   --class datastax.HelloWorld \
+   --class com.datastax.HelloWorld \
    --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark  \
    --deploy-mode cluster \
    --name spark-dse \
@@ -79,7 +81,7 @@ $ /Users/gilbertlau/spark-2.4.0-bin-hadoop2.7/bin/spark-submit \
 
 ### Monitor the spark jobs as K8 resources
 ```
-$ kubectl get pods (to local the driver) 
+$ kubectl get pods (to locate the driver) 
 $ kubectl logs -f spark-dse-xxxxxxxx-driver
 ```
 The spark-dse-xxxxxxxx-driver pod’s STATUS should come to “Completed” if the run is successful
