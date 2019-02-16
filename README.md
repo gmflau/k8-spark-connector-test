@@ -9,7 +9,6 @@
 #### Build, Run and Monitor the spark job:
 
 * Download and install Apache Spark (2.4.0) - https://spark.apache.org/downloads.html
-
 * Download the sample Scala spark application using spark-cassandra-connector
 ```
 $ git clone https://github.com/gmflau/k8-spark-connector-test 
@@ -35,8 +34,8 @@ Upload the fat jar to some HTTP server accessible from the K8 cluster env.
 #### Collect the K8 master API
 ```
 $ kubectl cluster-info
-```
 Kubernetes master is running at https://k8-1117-ak-gml-aks-rg-f26e06-05524b44.hcp.westus2.azmk8s.io:443
+```
 
 
 #### Collect IP address of one DSE node
