@@ -1,12 +1,12 @@
 ## k8-spark-connector-test
 
-#### Prerequisites:
+### Prerequisites:
 * Access to an existing K8 cluster (K8 master API URI)
 * Access to an existing DSE cluster (IP address of a DSE node)
 * sbt installed in your machine (https://www.scala-sbt.org)
 * IntelliJ IDE (optional)
 
-#### Build, Run and Monitor the spark job:
+### Build, Run and Monitor the spark job:
 
 * Download and install Apache Spark (2.4.0) - https://spark.apache.org/downloads.html
 * Download the sample Scala spark application using spark-cassandra-connector
@@ -15,7 +15,7 @@ $ git clone https://github.com/gmflau/k8-spark-connector-test
 $ cd k8-spark-connector-test
 ```
 
-#### Build the Uber jar (a.k.a. fat jar) as it is required to use with spark-submit command
+### Build the Uber jar (a.k.a. fat jar) as it is required to use with spark-submit command
 ```
 $ sbt assembly (will generate a fat jar under here: ./target/scala-2.11)
 ```
@@ -24,21 +24,21 @@ For example, I uploaded my fat jar to an Azure’s storage bucket:
 https://glau.blob.core.windows.net/spark-job/k8-spark-connector-test-assembly-0.1.jar
 
 
-#### Modify existing scala source or expand the application
+### Modify existing scala source or expand the application
 Scala source is located in this folder -> ./src/main/scala/datastax/
 ```
 Run $ sbt assembly 
 ```
 Upload the fat jar to some HTTP server accessible from the K8 cluster env.
 
-#### Collect the K8 master API
+### Collect the K8 master API
 ```
 $ kubectl cluster-info
 Kubernetes master is running at https://k8-1117-ak-gml-aks-rg-f26e06-05524b44.hcp.westus2.azmk8s.io:443
 ```
 
 
-#### Collect IP address of one DSE node
+### Collect IP address of one DSE node
 ```
 $ kubectl get pod dse-0 -owide
 NAME      READY     STATUS    RESTARTS   AGE       IP            NODE                       NOMINATED NODE
@@ -46,7 +46,7 @@ dse-0     1/1       Running   0          1d        172.19.1.73   aks-nodepool1-1
 
 ```
 
-#### Build the required Spark docker image
+### Build the required Spark docker image
 Inside Apache spark installation folder (my case: /Users/gilbertlau/spark-2.4.0-bin-hadoop2.7)
 ```
 $ ./bin/docker-image-tool.sh -r gcr.io/datastax-public/spark -t 2.4.0 build
@@ -54,14 +54,14 @@ $ ./bin/docker-image-tool.sh -r gcr.io/datastax-public/spark -t 2.4.0 push
 ```
 
 
-#### Set up the K8 service account and clusterrolebinding for the Spark cluster to create K8 resources
+### Set up the K8 service account and clusterrolebinding for the Spark cluster to create K8 resources
 ```
 $ kubectl create serviceaccount spark
 $ kubectl create clusterrolebinding spark-role --clusterrole=edit --serviceaccount=default:spark --namespace=default
 ```
 
 
-#### Submitting our application as Spark application to the K8 cluster
+### Submitting our application as Spark application to the K8 cluster
 For example, Apache Spark is installed at /Users/gilbertlau/spark-2.4.0-bin-hadoop2.7:
 ```
 $ /Users/gilbertlau/spark-2.4.0-bin-hadoop2.7/bin/spark-submit \
@@ -77,7 +77,7 @@ $ /Users/gilbertlau/spark-2.4.0-bin-hadoop2.7/bin/spark-submit \
 ```
 
 
-#### Monitor the spark jobs as K8 resources
+### Monitor the spark jobs as K8 resources
 ```
 $ kubectl get pods (to local the driver) 
 $ kubectl logs -f spark-dse-xxxxxxxx-driver
