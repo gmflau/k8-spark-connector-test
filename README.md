@@ -1,5 +1,5 @@
 ## k8-spark-connector-test
-This project contains sample spark application which can be run as spark submit job on a Spark cluster via spark-submit.  It is intended to demonstrate the followings:
+This project contains a sample spark application which can be run as spark submit job on a Spark cluster via spark-submit.  It is intended to demonstrate the followings:
 * Run OSS Apache Spark in K8 natively.
 * Run a spark job using Spark Cassandra Connector in cluster mode.
 
@@ -31,12 +31,13 @@ https://glau.blob.core.windows.net/spark-job/k8-spark-connector-test-assembly-0.
 
 
 ### Modify existing scala source or expand the application
-Scala source is located in this folder -> ./src/main/scala/datastax/
-After you are done updating the scala code, you will generate a new assembly jar again.
+Scala source is located in this folder -> ./src/main/scala/datastax/.
+After you are done updating your scala code, you will generate a new assembly jar as follows:
 ```
 Run $ sbt assembly 
 ```
-Upload the fat jar to some HTTP server accessible from the K8 cluster env.
+Then, upload the fat jar to some HTTP server accessible from the K8 cluster env.
+
 
 ### Collect the K8 master API URI
 ```
