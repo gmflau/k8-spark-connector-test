@@ -13,30 +13,30 @@ This project contains a sample spark application which can be run as spark submi
 
 ### Install Apache Spark, download this repo, and populate your DSE cluster
 * Download and install Apache Spark (2.4.0) - https://spark.apache.org/downloads.html
-* Download the sample Scala spark application using spark-cassandra-connector
+* Download this repo containing the sample Scala spark application using spark-cassandra-connector
 ```
 $ git clone https://github.com/gmflau/k8-spark-connector-test 
 $ cd k8-spark-connector-test
 ```
-* cqlsh into your DSE cluster then execute the ./example.cql
+* cqlsh into your DSE cluster then execute the [./example.cql](./example.cql)
 
 
-### Build the Uber jar (a.k.a. fat jar) as it is required by the spark-submit command
+### Build a Uber jar (a.k.a. fat jar / assembly jar) as it is required by the spark-submit command to run in cluster mode
 ```
-$ sbt assembly (will generate a fat jar under here: ./target/scala-2.11)
+$ sbt assembly (will generate a Uber jar under here: ./target/scala-2.11)
 ```
-Upload the the fat jar to some HTTP server accessible from the K8 cluster env.
-For example, I uploaded my fat jar to an Azure’s storage bucket:
+Upload the the Uber jar to some HTTP server accessible from the K8 cluster env.
+For example, I uploaded my Uber jar to an Azure’s storage bucket. Below is the HTTP URI for my Uber jar.
 https://glau.blob.core.windows.net/spark-job/k8-spark-connector-test-assembly-0.1.jar
 
 
-### Modify existing scala source or expand the application
+### Modify existing scala source or expand the application with more scala programs
 Scala source is located in this folder -> ./src/main/scala/datastax/.
 After you are done updating your scala code, you will generate a new assembly jar as follows:
 ```
 Run $ sbt assembly 
 ```
-Then, upload the fat jar to some HTTP server accessible from the K8 cluster env.
+Then, upload the Uber jar to some HTTP server accessible from the K8 cluster env.
 
 
 ### Collect the K8 master API URI
@@ -54,15 +54,16 @@ dse-0     1/1       Running   0          1d        172.19.1.73   aks-nodepool1-1
 
 ```
 
-### Build the required Spark docker image
-Inside Apache spark installation folder (my case: /Users/gilbertlau/spark-2.4.0-bin-hadoop2.7)
+
+### Build the required Spark docker image to run OSS Apache Spark on K8 in native fashion
+Inside Apache spark installation folder (my case: /Users/gilbertlau/spark-2.4.0-bin-hadoop2.7), then run the following commands.  You will need to replace **gcr.io/datastax-public** with your own container registery.
 ```
 $ ./bin/docker-image-tool.sh -r gcr.io/datastax-public/spark -t 2.4.0 build
 $ ./bin/docker-image-tool.sh -r gcr.io/datastax-public/spark -t 2.4.0 push
 ```
 
 
-### Set up the K8 service account and clusterrolebinding for the Spark cluster to create K8 resources
+### Set up the K8 service account and clusterrolebinding for the Spark cluster to create K8 resources to execute spark-submit jobs
 ```
 $ kubectl create serviceaccount spark
 $ kubectl create clusterrolebinding spark-role --clusterrole=edit --serviceaccount=default:spark --namespace=default
