@@ -1,4 +1,7 @@
 ## k8-spark-connector-test
+This project contains sample spark application which can be run as spark submit job on a Spark cluster via spark-submit.  It is intended to demonstrate the followings:
+* Run OSS Apache Spark in K8 natively.
+* Run a spark job using Spark Cassandra Connector in cluster mode.
 
 ## Prerequisites:
 * Access to an existing K8 cluster (K8 master API URI)
@@ -8,13 +11,15 @@
 
 ## Build, Run and Monitor the spark job
 
-### Install Apache Spark and this repo
+### Install Apache Spark, download this repo, and populate your DSE cluster
 * Download and install Apache Spark (2.4.0) - https://spark.apache.org/downloads.html
 * Download the sample Scala spark application using spark-cassandra-connector
 ```
 $ git clone https://github.com/gmflau/k8-spark-connector-test 
 $ cd k8-spark-connector-test
 ```
+* cqlsh into your DSE cluster then execute the ./example.cql
+
 
 ### Build the Uber jar (a.k.a. fat jar) as it is required by the spark-submit command
 ```
@@ -64,7 +69,7 @@ $ kubectl create clusterrolebinding spark-role --clusterrole=edit --serviceaccou
 
 
 ### Submitting our application as Spark application to the K8 cluster
-For example, Apache Spark is installed at /Users/gilbertlau/spark-2.4.0-bin-hadoop2.7:
+In my environment, Apache Spark is installed under /Users/gilbertlau/spark-2.4.0-bin-hadoop2.7. This example will run the com.datastax.HelloWorld scala program. If you want to run the InsertExample program, you can replace **--class com.datastax.HelloWorld** with **--class com.datastax.InsertExample"** in the following command.
 ```
 $ /Users/gilbertlau/spark-2.4.0-bin-hadoop2.7/bin/spark-submit \
    --master k8s://https://k8-1117-ak-gml-aks-rg-f26e06-05524b44.hcp.westus2.azmk8s.io:443 \
